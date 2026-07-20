@@ -310,6 +310,10 @@
   }
   .recalc:hover{color:var(--green);}
 
+  .save-list{display:grid; gap:28px;}
+  .save-item .btn{margin-bottom:12px;}
+  .save-body{font-size:14px; color:var(--muted); line-height:1.6; margin:0;}
+
   .form-embed{
     background:var(--surface-2); border:1px solid var(--line-strong); border-radius:12px;
     overflow:hidden; padding:4px;
@@ -333,6 +337,7 @@
       <button class="tab-btn" data-tool="investment">Investment Growth</button>
       <button class="tab-btn" data-tool="mortgage">Mortgage Payoff</button>
       <button class="tab-btn" data-tool="review">Get a Free Review</button>
+      <button class="tab-btn" data-tool="save">Save Money Here</button>
     </div>
   </div>
 </section>
@@ -719,6 +724,33 @@
       </div>
     </div>
 
+    <!-- ============ TOOL 5: SAVE MONEY HERE ============ -->
+    <div class="tool-panel" id="tool-save">
+      <div class="card">
+        <h2>A few easy wins.</h2>
+        <p class="tool-intro">No calculator needed for these — just places where a little comparison shopping tends to pay off.</p>
+
+        <div class="save-list">
+          <div class="save-item">
+            <a class="btn block" href="https://www.nerdwallet.com/banking/best/high-yield-online-savings-accounts?utm_campaign=cm_organic_060126_creator_network&utm_source=tt&utm_medium=social&utm_term=suketu&utm_content=bio" target="_blank" rel="noopener">Get a HYSA →</a>
+            <p class="save-body">Most big banks pay next to nothing on savings. A high-yield savings account pays substantially more on the exact same cash, with no extra risk and usually no fees — it's one of the few genuinely free upgrades in personal finance. If your emergency fund is sitting in a checking or regular savings account, this is likely your fastest win.</p>
+          </div>
+
+          <div class="save-item">
+            <a class="btn block" href="https://www.nerdwallet.com/insurance/auto/car-insurance-calculator?utm_campaign=cm_organic_060126_creator_network&utm_source=tt&utm_medium=social&utm_term=suketu&utm_content=bio" target="_blank" rel="noopener">Lower your car insurance →</a>
+            <p class="save-body">Car insurance rates vary a surprising amount between providers for identical coverage, and most people never shop around after their first policy. Rates also drift over time as your driving history, credit, and location change — even loyal customers often aren't getting the best price. A quick comparison can turn up meaningful monthly savings for the same coverage.</p>
+          </div>
+
+          <div class="save-item">
+            <a class="btn block" href="https://www.nerdwallet.com/credit-cards/best/travel?utm_campaign=cm_organic_060126_creator_network&utm_source=tt&utm_medium=social&utm_term=suketu&utm_content=bio" target="_blank" rel="noopener">Best travel credit cards →</a>
+            <p class="save-body">If you already pay your balance in full every month, a good travel card turns everyday spending into free flights, hotels, or cash back — money you're leaving on the table with a no-rewards card. This only makes sense if you're not carrying a balance: interest charges will wipe out any rewards you earn many times over.</p>
+          </div>
+        </div>
+
+        <p class="footnote" style="margin-top:24px;">These links may be affiliate or referral links — clicking them costs you nothing extra, but may support this site.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -746,6 +778,11 @@
       eyebrow:'A second pair of eyes',
       title:'Get a <em>free review</em>.',
       sub:"Share your numbers and get them looked at, anonymously if you'd like. This is the only tab where anything leaves your browser."
+    },
+    save: {
+      eyebrow:'A few easy wins',
+      title:'Save money <em>here</em>.',
+      sub:"A handful of places where a few minutes of comparison shopping puts real money back in your pocket."
     }
   };
   document.querySelectorAll('.tab-btn').forEach(btn => {
