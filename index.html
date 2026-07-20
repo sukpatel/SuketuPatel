@@ -310,6 +310,12 @@
   }
   .recalc:hover{color:var(--green);}
 
+  .form-embed{
+    background:var(--surface-2); border:1px solid var(--line-strong); border-radius:12px;
+    overflow:hidden; padding:4px;
+  }
+  .form-embed iframe{display:block; border-radius:8px; background:#fff;}
+
   footer{
     text-align:center; padding:40px 24px 60px; color:var(--muted); font-size:12px; font-family:var(--mono);
   }
@@ -326,6 +332,7 @@
       <button class="tab-btn active" data-tool="retirement">Freedom Number</button>
       <button class="tab-btn" data-tool="investment">Investment Growth</button>
       <button class="tab-btn" data-tool="mortgage">Mortgage Payoff</button>
+      <button class="tab-btn" data-tool="review">Get a Free Review</button>
     </div>
   </div>
 </section>
@@ -696,10 +703,26 @@
       </div>
     </div>
 
+    <!-- ============ TOOL 4: FREE FINANCIAL REVIEW ============ -->
+    <div class="tool-panel" id="tool-review">
+      <div class="card">
+        <h2>Want your finances reviewed?</h2>
+        <p class="tool-intro">Fill this out and it'll be reviewed anonymously — email is optional, only include it if you want advice sent back directly. This form leaves your browser and goes to Google Forms, unlike the calculators above.</p>
+        <div class="form-embed">
+          <iframe
+            src="https://docs.google.com/forms/d/e/1FAIpQLScKB-qzS05-fY8Id3Vtvn6ug7Q2Tny3FvfnR0tGQJwi4_-QhA/viewform?embedded=true"
+            width="100%" height="1400" frameborder="0" marginheight="0" marginwidth="0">
+            Loading…
+          </iframe>
+        </div>
+        <p class="footnote" style="margin-top:20px;">If the form doesn't load, you can <a href="https://forms.gle/ev2qg29YKpxGePPB7" target="_blank" rel="noopener">open it directly in a new tab</a>.</p>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<footer>FREEDOM NUMBER · PRIVATE CALCULATORS · NO DATA LEAVES YOUR BROWSER</footer>
+<footer>FREEDOM NUMBER · CALCULATORS RUN ENTIRELY IN YOUR BROWSER · THE REVIEW FORM IS THE ONLY TAB THAT SENDS DATA ANYWHERE</footer>
 
 <script>
   /* ============ TAB SWITCHING ============ */
@@ -718,6 +741,11 @@
       eyebrow:'Your mortgage, mapped out',
       title:'Know your <em>payoff date</em>.',
       sub:"See exactly when your mortgage disappears, what it costs you in interest, and how extra payments speed things up."
+    },
+    review: {
+      eyebrow:'A second pair of eyes',
+      title:'Get a <em>free review</em>.',
+      sub:"Share your numbers and get them looked at, anonymously if you'd like. This is the only tab where anything leaves your browser."
     }
   };
   document.querySelectorAll('.tab-btn').forEach(btn => {
