@@ -327,6 +327,20 @@
   footer{
     text-align:center; padding:40px 24px 60px; color:var(--muted); font-size:12px; font-family:var(--mono);
   }
+
+  .share-result{margin:25px 0 8px;padding:20px;border:1px solid var(--line-strong);background:var(--green-pale);border-radius:12px;text-align:center}
+  .share-result p{font-size:13px;color:var(--muted);margin:7px 0 16px}
+  .share-overlay{position:fixed;inset:0;background:rgba(13,28,19,.82);z-index:9999;display:none;align-items:center;justify-content:center;padding:20px;overflow:auto}
+  .share-overlay.open{display:flex}
+  .share-dialog{width:min(100%,460px);max-height:95vh;overflow:auto;background:var(--surface);border-radius:18px;padding:19px;box-shadow:0 12px 50px rgba(0,0,0,.25)}
+  .share-dialog-head{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:14px}
+  .share-dialog-head h2{font-family:var(--serif);font-weight:400;font-size:22px;margin:0}
+  .share-close{border:0;background:var(--surface-2);border-radius:999px;padding:8px 13px;font-size:18px;cursor:pointer}
+  .share-preview{display:block;height:min(51vh,460px);max-width:100%;margin:0 auto 16px;border-radius:8px;aspect-ratio:9/16;object-fit:contain;background:var(--green)}
+  .share-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .share-actions .btn{padding:12px 8px;font-size:13px;text-decoration:none}
+  .share-help{font-size:12px;color:var(--muted);line-height:1.5;margin:12px 0 0}
+  @media(max-width:430px){.share-actions{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -585,6 +599,7 @@
           <h3 class="section-title">Notes on your plan</h3>
           <div class="tips-grid" id="tipsGrid"></div>
 
+          <div class="share-result"><strong>Share your results</strong><p>Create a 1080 × 1920 Instagram Story image with your numbers. Only share what you choose.</p><button class="btn" type="button" onclick="openStoryShare('retirement')">↗ Share to Instagram Story</button></div>
           <button class="recalc" onclick="recalculate()">↺ Start over with new numbers</button>
         </div>
 
@@ -635,6 +650,7 @@
             <div class="stat"><div class="v" id="invStatGrowth">—</div><div class="l">Total growth</div></div>
           </div>
 
+          <div class="share-result"><strong>Share your results</strong><p>Create a 1080 × 1920 Instagram Story image with your numbers. Only share what you choose.</p><button class="btn" type="button" onclick="openStoryShare('investment')">↗ Share to Instagram Story</button></div>
           <h3 class="section-title">Balance over time</h3>
           <div class="chart-box">
             <svg id="invChart" viewBox="0 0 640 260" preserveAspectRatio="none"></svg>
@@ -700,6 +716,7 @@
             <div class="stat"><div class="v" id="mStatTotal">—</div><div class="l">Total cost of loan</div></div>
           </div>
 
+          <div class="share-result"><strong>Share your results</strong><p>Create a 1080 × 1920 Instagram Story image with your numbers. Only share what you choose.</p><button class="btn" type="button" onclick="openStoryShare('mortgage')">↗ Share to Instagram Story</button></div>
           <div id="mExtraNote" class="footnote" style="display:none; margin-top:-16px;"></div>
 
           <h3 class="section-title">Balance over time</h3>
@@ -764,6 +781,7 @@
             <div class="stat"><div class="v" id="rbRentWealth">—</div><div class="l">Rent: investment balance</div></div>
             <div class="stat"><div class="v" id="rbMortgagePayment">—</div><div class="l">Starting mortgage P&amp;I / mo</div></div>
           </div>
+          <div class="share-result"><strong>Share your results</strong><p>Create a 1080 × 1920 Instagram Story image with your numbers. Only share what you choose.</p><button class="btn" type="button" onclick="openStoryShare('rentbuy')">↗ Share to Instagram Story</button></div>
           <h3 class="section-title">Where the numbers come from</h3>
           <table class="milestones"><tbody id="rbBreakdown"></tbody></table>
           <h3 class="section-title">Projected net wealth over time</h3>
@@ -1271,6 +1289,90 @@
     document.getElementById('rbResults').classList.add('show');
   }
   document.getElementById('copyrightYear').textContent=new Date().getFullYear();
+
+  /* Instagram Story result cards: generated on-device, no image API or data upload. */
+  let storyImageBlob=null, storyImageURL=null, storyImageFile=null;
+  const storyText = id => document.getElementById(id).textContent.trim();
+  function storySpec(type){
+    switch(type){
+      case 'retirement':return {tag:'FREEDOM NUMBER',title:'My financial freedom goal',big:storyText('freedomNumberOut'),bigLabel:'MY TARGET INVESTMENT PORTFOLIO',metrics:[['Projected freedom age',storyText('freedomAgeOut')],['Years to goal',storyText('statYears')],['Investable assets today',storyText('statCurrent')]],note:'Illustrative projection, not a guarantee.'};
+      case 'investment':return {tag:'INVESTMENT GROWTH',title:'My money, compounded',big:storyText('invFutureValue'),bigLabel:'PROJECTED INVESTMENT BALANCE',metrics:[['Starting balance',storyText('invStatStart')],['Total contributions',storyText('invStatContrib')],['Projected growth',storyText('invStatGrowth')]],note:'Assumed returns are not guaranteed.'};
+      case 'mortgage':return {tag:'MORTGAGE PAYOFF',title:'My mortgage payoff plan',big:storyText('mMonthlyPayment'),bigLabel:'MONTHLY PRINCIPAL & INTEREST',metrics:[['Loan amount',storyText('mStatLoan')],['Estimated interest',storyText('mStatInterest')],['Estimated loan cost',storyText('mStatTotal')]],note:storyText('mPayoffDate')};
+      case 'rentbuy':return {tag:'RENT VS. BUY',title:'My rent vs. buy breakdown',big:storyText('rbWinner'),bigLabel:'PROJECTED OUTCOME',metrics:[['Wealth difference',storyText('rbDifference')],['Buying: end wealth',storyText('rbBuyWealth')],['Renting: end wealth',storyText('rbRentWealth')]],note:'Results depend on the assumptions entered.'};
+      default:throw new Error('Unknown calculator');
+    }
+  }
+  function storyWrap(ctx, text, maxWidth, font, maxLines=2){
+    ctx.font=font;
+    const words=String(text).split(/\s+/), lines=[];let line='';
+    for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth && line){lines.push(line);line=word;}else line=test;}
+    if(line)lines.push(line);
+    return lines.slice(0,maxLines);
+  }
+  function storyRounded(ctx,x,y,w,h,r,fill){ctx.fillStyle=fill;ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fill();}
+  function drawStoryCard(type){
+    const d=storySpec(type),canvas=document.createElement('canvas');canvas.width=1080;canvas.height=1920;
+    const c=canvas.getContext('2d');
+    c.fillStyle='#025834';c.fillRect(0,0,1080,1920);
+    let grad=c.createRadialGradient(910,240,20,910,240,820);grad.addColorStop(0,'#27835b');grad.addColorStop(1,'#025834');c.fillStyle=grad;c.fillRect(0,0,1080,950);
+    c.strokeStyle='rgba(241,233,225,.16)';c.lineWidth=2;
+    for(let i=0;i<7;i++){c.beginPath();c.arc(950,370,160+i*86,0,Math.PI*2);c.stroke();}
+    c.fillStyle='#d1ebd8';c.font='600 29px sans-serif';c.fillText('SUKETU PATEL  /  MONEY TOOLS',75,133);
+    c.fillStyle='#f1e9e1';c.font='bold 27px sans-serif';c.fillText(d.tag,75,290);
+    c.fillStyle='#fff7ed';let tLines=storyWrap(c,d.title,910,'normal 79px Georgia',2);c.font='normal 79px Georgia';tLines.forEach((t,i)=>c.fillText(t,75,400+i*93));
+    storyRounded(c,62,650,956,924,34,'#f7f2ed');
+    c.fillStyle='#42624f';c.font='600 25px sans-serif';c.fillText(d.bigLabel,102,742);
+    let fontSize=113;
+    while(fontSize>49){c.font='normal '+fontSize+'px Georgia';if(c.measureText(d.big).width<=875)break;fontSize-=4;}
+    c.fillStyle='#025834';c.fillText(d.big,100,872);
+    c.strokeStyle='#d5dfd3';c.beginPath();c.moveTo(101,934);c.lineTo(980,934);c.stroke();
+    d.metrics.forEach(([label,value],i)=>{
+      const y=1018+i*153;
+      c.fillStyle='#5c4f42';c.font='28px sans-serif';c.fillText(label,105,y);
+      let f=42;c.font='600 '+f+'px sans-serif';while(c.measureText(value).width>860 && f>24){f-=2;c.font='600 '+f+'px sans-serif';}
+      const lines=storyWrap(c,value,855,'600 '+f+'px sans-serif',2);c.fillStyle='#025834';lines.forEach((line,j)=>c.fillText(line,105,y+57+j*41));
+    });
+    c.fillStyle='#d9eadd';c.font='normal 34px Georgia';c.fillText('Try the free calculators yourself',76,1680);
+    c.fillStyle='#fff7ed';c.font='bold 52px sans-serif';c.fillText('suketupatel.me',76,1753);
+    c.fillStyle='#cbded2';c.font='22px sans-serif';
+    storyWrap(c,d.note+'  •  Educational only — not financial advice.',918,'22px sans-serif',2).forEach((line,i)=>c.fillText(line,76,1841+i*33));
+    return canvas;
+  }
+  function closeStoryShare(){
+    const el=document.getElementById('storyShareOverlay');el.classList.remove('open');el.setAttribute('aria-hidden','true');
+  }
+  async function openStoryShare(type){
+    try {
+      const canvas=drawStoryCard(type);
+      const blob=await new Promise((res,rej)=>canvas.toBlob(b=>b?res(b):rej(Error('Image creation failed')),'image/png'));
+      if(storyImageURL)URL.revokeObjectURL(storyImageURL);
+      storyImageBlob=blob;storyImageURL=URL.createObjectURL(blob);storyImageFile=new File([blob],'suketu-finance-story.png',{type:'image/png'});
+      document.getElementById('storySharePreview').src=storyImageURL;
+      document.getElementById('storySaveLink').href=storyImageURL;
+      const el=document.getElementById('storyShareOverlay');el.classList.add('open');el.setAttribute('aria-hidden','false');
+      document.getElementById('storyNativeShare').hidden=!(navigator.share && (!navigator.canShare || navigator.canShare({files:[storyImageFile]})));
+    } catch(err){console.error(err);alert('Unable to create the Story image on this device. Please try a modern browser.');}
+  }
+  async function nativeStoryShare(){
+    if(!storyImageFile || !navigator.share)return;
+    try{await navigator.share({files:[storyImageFile],title:'My money calculator results',text:'Try it at suketupatel.me'});}
+    catch(err){if(err.name!=='AbortError')alert('Direct sharing is unavailable. Use Save Story PNG instead.');}
+  }
+  document.getElementById('storyShareOverlay').addEventListener('click',e=>{if(e.target.id==='storyShareOverlay')closeStoryShare();});
+  document.addEventListener('keydown',e=>{if(e.key==='Escape')closeStoryShare();});
+
 </script>
+
+<div id="storyShareOverlay" class="share-overlay" role="dialog" aria-modal="true" aria-labelledby="storyShareTitle" aria-hidden="true">
+  <div class="share-dialog">
+    <div class="share-dialog-head"><h2 id="storyShareTitle">Your Instagram Story</h2><button type="button" class="share-close" aria-label="Close preview" onclick="closeStoryShare()">×</button></div>
+    <img id="storySharePreview" class="share-preview" alt="Preview of 9:16 financial calculator result story">
+    <div class="share-actions">
+      <button class="btn" type="button" id="storyNativeShare" onclick="nativeStoryShare()">↗ Share image</button>
+      <a class="btn ghost" id="storySaveLink" href="#" download="suketu-finance-story.png">↓ Save Story PNG</a>
+    </div>
+    <p class="share-help">On mobile, tap “Share image” and choose Instagram if available. Otherwise save the image, open Instagram, and add it to your Story. Instagram doesn't always support direct Story sharing from websites. Sharing is optional; no calculator data is uploaded by this site.</p>
+  </div>
+</div>
 </body>
 </html>
