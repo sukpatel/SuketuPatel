@@ -5,7 +5,7 @@
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💵</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Freedom Number — Money Calculators</title>
-<meta name="description" content="Find your Freedom Number, project investment growth, and see your mortgage payoff date — three private calculators, nothing stored, nothing sent anywhere.">
+<meta name="description" content="Find your Freedom Number, project investment growth, and see your mortgage payoff date — four educational calculators. Inputs stay in your browser and are not saved or submitted.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -85,6 +85,9 @@
     margin:0 0 32px;
   }
 
+  .privacy-chip{display:inline-block;border:1px solid rgba(241,233,225,.35);background:rgba(241,233,225,.08);padding:9px 14px;border-radius:10px;font-size:12px;margin:0 0 22px;color:#f1e9e1}
+  .field.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  @media(max-width:520px){.field.row{grid-template-columns:1fr}}
   .tool-tabs{
     display:flex; gap:8px; flex-wrap:wrap;
     border-top:1px solid rgba(241,233,225,0.2);
@@ -332,11 +335,13 @@
   <div class="wrap">
     <div class="eyebrow" id="heroEyebrow">Retirement, quantified</div>
     <h1 id="heroTitle">Find your <em>Freedom Number</em>.</h1>
-    <p id="heroSub">Answer a few questions about your savings, income, and goals. Get a real number for what retirement costs you — and the age you'll get there. Nothing is stored, nothing is sent anywhere.</p>
+    <p id="heroSub">Answer a few questions about your savings, income, and goals. Estimate a retirement target and a possible timeline based on assumptions. Calculator inputs stay on your device and are not saved or submitted.</p>
+    <div class="privacy-chip">🔒 Private calculator inputs · No accounts · No calculator data stored</div>
     <div class="tool-tabs">
       <button class="tab-btn active" data-tool="retirement">Freedom Number</button>
       <button class="tab-btn" data-tool="investment">Investment Growth</button>
       <button class="tab-btn" data-tool="mortgage">Mortgage Payoff</button>
+      <button class="tab-btn" data-tool="rentbuy">Rent vs. Buy</button>
       <button class="tab-btn" data-tool="review">Get a Free Review</button>
       <button class="tab-btn" data-tool="save">Save Money Here</button>
     </div>
@@ -543,13 +548,13 @@
 
           <div class="stat-grid">
             <div class="stat"><div class="v" id="statYears">—</div><div class="l">Years to freedom</div></div>
-            <div class="stat"><div class="v" id="statCurrent">—</div><div class="l">Retirement net worth today</div></div>
+            <div class="stat"><div class="v" id="statCurrent">—</div><div class="l">Investable assets today</div></div>
             <div class="stat"><div class="v" id="statMonthly">—</div><div class="l">Monthly contribution</div></div>
           </div>
 
           <h3 class="section-title">Net worth snapshot</h3>
           <div class="stat-grid cols-4">
-            <div class="stat"><div class="v" id="nwRetirement">—</div><div class="l">Retirement assets</div></div>
+            <div class="stat"><div class="v" id="nwRetirement">—</div><div class="l">Investable assets</div></div>
             <div class="stat"><div class="v" id="nwEquity">—</div><div class="l">Home equity</div></div>
             <div class="stat"><div class="v" id="nwVehicles">—</div><div class="l">Vehicles</div></div>
             <div class="stat"><div class="v" id="nwTotal">—</div><div class="l">Total net worth</div></div>
@@ -709,11 +714,70 @@
       </div>
     </div>
 
-    <!-- ============ TOOL 4: FREE FINANCIAL REVIEW ============ -->
+    <!-- ============ TOOL 4: RENT VS BUY ============ -->
+    <div class="tool-panel" id="tool-rentbuy">
+      <div class="card">
+        <h2>Should you rent or buy?</h2>
+        <p class="tool-intro">Compare the wealth you'd build as a homeowner against renting and investing the money you don't spend on ownership. Change any assumption to see how the result shifts.</p>
+        <div class="subsection-label">The home you might buy</div>
+        <div class="field row">
+          <div><label for="rbPrice">Home purchase price ($)</label><input type="number" id="rbPrice" value="400000" min="1" step="1000"></div>
+          <div><label for="rbDown">Down payment ($)</label><input type="number" id="rbDown" value="80000" min="0" step="1000"></div>
+        </div>
+        <div class="field row">
+          <div><label for="rbRate">Mortgage interest rate (%)</label><input type="number" id="rbRate" value="6.5" min="0" max="30" step="0.1"></div>
+          <div><label for="rbTerm">Loan term (years)</label><select id="rbTerm"><option value="30">30</option><option value="20">20</option><option value="15">15</option></select></div>
+        </div>
+        <div class="field row">
+          <div><label for="rbTax">Annual property tax (% of value)</label><input type="number" id="rbTax" value="1.1" min="0" max="20" step="0.1"></div>
+          <div><label for="rbInsurance">Home insurance ($ / year)</label><input type="number" id="rbInsurance" value="1800" min="0" step="100"></div>
+        </div>
+        <div class="field row">
+          <div><label for="rbMaintenance">Annual maintenance (% of home value)</label><input type="number" id="rbMaintenance" value="1" min="0" max="20" step="0.1"></div>
+          <div><label for="rbHOA">HOA ($ / month)</label><input type="number" id="rbHOA" value="0" min="0" step="25"></div>
+        </div>
+        <div class="field row">
+          <div><label for="rbPMI">PMI ($ / month, if applicable)</label><input type="number" id="rbPMI" value="0" min="0" step="25"><div class="hint">Estimate PMI if your down payment is under 20%. This model removes PMI once you reach 20% equity relative to original value.</div></div>
+          <div><label for="rbBuyClosing">Buyer closing costs (% of price)</label><input type="number" id="rbBuyClosing" value="3" min="0" max="30" step="0.25"></div>
+        </div>
+        <div class="subsection-label">Renting and investing</div>
+        <div class="field row">
+          <div><label for="rbRent">Comparable monthly rent ($)</label><input type="number" id="rbRent" value="2200" min="0" step="50"></div>
+          <div><label for="rbRentInsurance">Renter's insurance ($ / month)</label><input type="number" id="rbRentInsurance" value="20" min="0" step="5"></div>
+        </div>
+        <div class="field row">
+          <div><label for="rbRentGrowth">Annual rent increase (%)</label><input type="number" id="rbRentGrowth" value="3" min="-10" max="25" step="0.5"></div>
+          <div><label for="rbInvestReturn">Annual investment return (%)</label><input type="number" id="rbInvestReturn" value="7" min="-20" max="30" step="0.5"></div>
+        </div>
+        <div class="subsection-label">Timeframe and resale</div>
+        <div class="field row">
+          <div><label for="rbYears">How long will you stay? (years)</label><input type="number" id="rbYears" value="10" min="1" max="40" step="1"></div>
+          <div><label for="rbAppreciation">Annual home appreciation (%)</label><input type="number" id="rbAppreciation" value="3" min="-20" max="25" step="0.5"></div>
+        </div>
+        <div class="field"><label for="rbSelling">Selling costs (% of future sale price)</label><input type="number" id="rbSelling" value="6" min="0" max="30" step="0.5"></div>
+        <p class="footnote" style="margin:12px 0 0">Assumes comparable homes, equal non-housing budgets, fixed-rate mortgage, end-of-month investments, and selling the home at the end. It does not model mortgage tax deductions, capital gains or investment taxes, utilities, rental deposits, special assessments, or refinancing.</p>
+        <div class="nav-btns"><button class="btn block" onclick="calculateRentBuy()">Compare my options →</button></div>
+        <div class="results" id="rbResults" style="margin-top:36px" aria-live="polite">
+          <div class="reveal"><div class="r-eyebrow">Projected ending wealth advantage</div><div class="freedom-number" id="rbWinner">—</div><div class="freedom-sub" id="rbDifference">—</div></div>
+          <div class="stat-grid">
+            <div class="stat"><div class="v" id="rbBuyWealth">—</div><div class="l">Buy: net sale proceeds + invested savings</div></div>
+            <div class="stat"><div class="v" id="rbRentWealth">—</div><div class="l">Rent: investment balance</div></div>
+            <div class="stat"><div class="v" id="rbMortgagePayment">—</div><div class="l">Starting mortgage P&amp;I / mo</div></div>
+          </div>
+          <h3 class="section-title">Where the numbers come from</h3>
+          <table class="milestones"><tbody id="rbBreakdown"></tbody></table>
+          <h3 class="section-title">Projected net wealth over time</h3>
+          <div class="chart-box"><svg id="rbChart" viewBox="0 0 640 260" role="img" aria-label="Rent versus buy projected wealth chart"></svg><div class="chart-legend"><span><span class="dot" style="background:var(--green)"></span>Buy wealth</span><span><span class="dot" style="background:#a8412f"></span>Rent wealth</span></div></div>
+          <p class="footnote" id="rbExplain" style="margin:0"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ============ TOOL 5: FREE FINANCIAL REVIEW ============ -->
     <div class="tool-panel" id="tool-review">
       <div class="card">
         <h2>Want your finances reviewed?</h2>
-        <p class="tool-intro">Fill this out and it'll be reviewed anonymously — email is optional, only include it if you want advice sent back directly. This form leaves your browser and goes to Google Forms, unlike the calculators above.</p>
+        <p class="tool-intro">Optional external Google Form. Anything you submit goes to Google and the form owner; unlike calculator entries, form responses may be stored. Do not submit passwords, account numbers, or other sensitive information. This is an educational review, not financial advice.</p>
         <div class="form-embed">
           <iframe
             src="https://docs.google.com/forms/d/e/1FAIpQLScKB-qzS05-fY8Id3Vtvn6ug7Q2Tny3FvfnR0tGQJwi4_-QhA/viewform?embedded=true"
@@ -725,7 +789,7 @@
       </div>
     </div>
 
-    <!-- ============ TOOL 5: SAVE MONEY HERE ============ -->
+    <!-- ============ TOOL 6: SAVE MONEY HERE ============ -->
     <div class="tool-panel" id="tool-save">
       <div class="card">
         <h2>A few easy wins.</h2>
@@ -755,7 +819,7 @@
   </div>
 </section>
 
-<footer>FREEDOM NUMBER · CALCULATORS RUN ENTIRELY IN YOUR BROWSER · THE REVIEW FORM IS THE ONLY TAB THAT SENDS DATA ANYWHERE</footer>
+<footer><div class="wrap"><strong>Privacy:</strong> Calculator entries and results are processed locally in your browser. This site does not save or submit calculator inputs; refreshing the page resets them. Google Fonts and third-party links may involve normal third-party network requests. The optional Google Form is separate, and submissions may be stored by Google and the form owner.<br><br><strong>Important disclaimer:</strong> Suketu Patel is not a licensed financial advisor. All tools and content are for general educational and informational purposes only, not personalized financial, investment, tax, or legal advice. Returns, prices, and projections are estimates, not guarantees. Consider consulting qualified professionals before making major financial decisions.<br><br>© <span id="copyrightYear"></span> Suketu Patel · suketupatel.me</div></footer>
 
 <script>
   /* ============ TAB SWITCHING ============ */
@@ -763,12 +827,17 @@
     retirement: {
       eyebrow:'Retirement, quantified',
       title:'Find your <em>Freedom Number</em>.',
-      sub:"Answer a few questions about your savings, income, and goals. Get a real number for what retirement costs you — and the age you'll get there. Nothing is stored, nothing is sent anywhere."
+      sub:"Answer a few questions about your savings, income, and goals. Estimate a retirement target and a possible timeline based on assumptions. Calculator inputs stay on your device and are not saved or submitted."
     },
     investment: {
       eyebrow:'Compound interest, visualized',
       title:'Watch your money <em>compound</em>.',
       sub:"See what consistent investing actually turns into over time — starting amount, monthly contribution, and years, that's it."
+    },
+    rentbuy: {
+      eyebrow:'Housing decisions, quantified',
+      title:'Should you <em>rent or buy</em>?',
+      sub:'Compare home equity and ownership costs with renting and investing. All calculator inputs stay in your browser.'
     },
     mortgage: {
       eyebrow:'Your mortgage, mapped out',
@@ -778,7 +847,7 @@
     review: {
       eyebrow:'A second pair of eyes',
       title:'Get a <em>free review</em>.',
-      sub:"Share your numbers and get them looked at, anonymously if you'd like. This is the only tab where anything leaves your browser."
+      sub:"Share your numbers and get them looked at, anonymously if you'd like. The optional Google Form collects and stores information you choose to submit."
     },
     save: {
       eyebrow:'A few easy wins',
@@ -894,6 +963,7 @@
 
   function calculate(){
     const age = val('age');
+    if (age < 16 || age > 90 || val('targetIncome') <= 0) { alert('Enter an age from 16 to 90 and a positive retirement income target.'); return; }
     const targetIncome = val('targetIncome');
     const wdRate = val('withdrawalRate')/100;
     const debtCC = val('debtCC'), debtStudent = val('debtStudent'), debtOther = val('debtOther');
@@ -906,10 +976,12 @@
     const pBrokerage = spouseOn ? val('pBrokerage') : 0;
     const pMonthly = spouseOn ? val('pMonthly') : 0;
 
-    const retirementAssets = val('s401k') + val('sRoth') + val('sBrokerage') + val('sHYSA') + homeEquity + pRetirement + pBrokerage;
+    // Investable assets only: exclude home equity and vehicles from retirement growth.
+    // Debt is reflected in net worth, but not subtracted from invested assets.
+    const retirementAssets = val('s401k') + val('sRoth') + val('sBrokerage') + val('sHYSA') + pRetirement + pBrokerage;
     const debtForCalc = debtCC + debtStudent + debtOther;
-    const netWorthForCalc = retirementAssets - debtForCalc;
-    const totalNetWorth = netWorthForCalc + vehicles;
+    const netWorthForCalc = retirementAssets;
+    const totalNetWorth = retirementAssets + homeEquity + vehicles - mortgage * (houseValue === 0 ? 1 : 0) - debtForCalc;
 
     const monthly = val('monthlyContribution') + pMonthly;
     const annualContribution = monthly * 12;
@@ -931,12 +1003,12 @@
     const freedomAge = year < maxYears ? age + year : null;
 
     document.getElementById('freedomNumberOut').textContent = fmt(freedomNumber);
-    document.getElementById('freedomAgeOut').textContent = freedomAge ? freedomAge : '70+';
-    document.getElementById('statYears').textContent = freedomAge ? (freedomAge-age)+' yrs' : '70+ yrs';
+    document.getElementById('freedomAgeOut').textContent = freedomAge !== null ? freedomAge : 'Not reached';
+    document.getElementById('statYears').textContent = freedomAge !== null ? (freedomAge-age)+' yrs' : 'Not in model';
     document.getElementById('statCurrent').textContent = fmtShort(netWorthForCalc);
     document.getElementById('statMonthly').textContent = fmtShort(monthly)+'/mo';
 
-    document.getElementById('nwRetirement').textContent = fmtShort(netWorthForCalc);
+    document.getElementById('nwRetirement').textContent = fmtShort(retirementAssets);
     document.getElementById('nwEquity').textContent = fmtShort(homeEquity);
     document.getElementById('nwVehicles').textContent = fmtShort(vehicles);
     document.getElementById('nwTotal').textContent = fmtShort(totalNetWorth);
@@ -983,9 +1055,9 @@
 
     const doingWell = [];
     if (debtForCalc === 0) doingWell.push("You're carrying no non-mortgage debt, so every dollar you save goes straight toward growth.");
-    if (wdRate <= 0.04) doingWell.push(`Your ${(wdRate*100).toFixed(1)}% withdrawal rate is in a well-tested safe range for a 30+ year retirement.`);
-    if (emergencyMonths >= 3) doingWell.push(`You've got roughly ${emergencyMonths.toFixed(1)} months of expenses in cash — a solid emergency buffer.`);
-    if (contributionRatio >= 0.15) doingWell.push("You're saving a strong share of your target income each month, ahead of the typical recommendation.");
+    if (wdRate <= 0.04) doingWell.push(`Your ${(wdRate*100).toFixed(1)}% assumed withdrawal rate is relatively conservative, but no rate guarantees success.`);
+    if (emergencyMonths >= 3) doingWell.push(`Your cash equals about ${emergencyMonths.toFixed(1)} months of target retirement income — a solid emergency buffer.`);
+    if (contributionRatio >= 0.15) doingWell.push("Your projected contributions are substantial relative to your target retirement income (not your actual income).");
     if (spouseOn && pMonthly > 0) doingWell.push("You and your partner are both contributing — combining savings builds your number faster than either alone.");
     if (homeEquity > 0) doingWell.push("You're building real equity in your home, which adds to your net worth outside the market.");
 
@@ -1021,6 +1093,7 @@
 
   function calculateInvestment(){
     const initial = val('invInitial');
+    if (initial < 0 || val('invMonthly') < 0) { alert('Investment balances and contributions cannot be negative.'); return; }
     const monthly = val('invMonthly');
     const years = val('invYears');
     const rate = val('invReturn')/100;
@@ -1062,6 +1135,7 @@
   function monthlyPI(loanAmount, annualRate, termYears){
     const r = annualRate/100/12;
     const n = termYears*12;
+    if (loanAmount <= 0) return 0;
     if (r === 0) return loanAmount/n;
     return loanAmount * r * Math.pow(1+r, n) / (Math.pow(1+r, n)-1);
   }
@@ -1095,7 +1169,8 @@
   function calculateMortgage(){
     const homePrice = val('mHomePrice');
     const down = val('mDownPayment');
-    const loanAmount = Math.max(0, homePrice - down);
+    if (homePrice <= 0 || down < 0 || down > homePrice || val('mExtra') < 0) { alert('Enter a valid home price, down payment, and extra payment.'); return; }
+    const loanAmount = homePrice - down;
     const rate = val('mRate');
     const term = parseInt(document.getElementById('mTerm').value, 10);
     const extra = val('mExtra');
@@ -1131,6 +1206,71 @@
 
     document.getElementById('mResults').classList.add('show');
   }
+
+  /* ============================================================
+     TOOL 4 — RENT VS BUY: equal-starting-cash wealth comparison
+     ============================================================ */
+  function calculateRentBuy(){
+    const n = id => Number(document.getElementById(id).value);
+    const price=n('rbPrice'), down=n('rbDown'), rate=n('rbRate'), term=n('rbTerm');
+    const years=n('rbYears'), rent=n('rbRent'), rentIns=n('rbRentInsurance');
+    const tax=n('rbTax')/100, insurance=n('rbInsurance'), maintenance=n('rbMaintenance')/100;
+    const hoa=n('rbHOA'), pmi=n('rbPMI'), closing=n('rbBuyClosing')/100;
+    const rentGrowth=n('rbRentGrowth')/100, ret=n('rbInvestReturn')/100;
+    const app=n('rbAppreciation')/100, selling=n('rbSelling')/100;
+    const nonneg=[price,down,rate,rent,rentIns,tax,insurance,maintenance,hoa,pmi,closing,selling];
+    if (nonneg.some(v=>!Number.isFinite(v)||v<0) || price<=0 || down>price || !Number.isInteger(years)||years<1||years>40 ||
+        [rentGrowth,ret,app].some(v=>!Number.isFinite(v)||v<=-1) || ![15,20,30].includes(term)) {
+      alert('Please check your inputs: use a positive home price, a down payment no larger than the price, 1–40 years, and valid rates.'); return;
+    }
+    const loan=price-down, payment=monthlyPI(loan,rate,term), r=rate/1200;
+    const ir=Math.pow(1+ret,1/12)-1, hr=Math.pow(1+app,1/12)-1, rr=Math.pow(1+rentGrowth,1/12)-1;
+    let home=price, balance=loan, rentInvestment=down+price*closing, buyInvestment=0;
+    let buyHousingTotal=down+price*closing, rentHousingTotal=0, interestTotal=0;
+    const buyPath=[], rentPath=[];
+    function wealth(){ return {buy:buyInvestment+home*(1-selling)-balance, rent:rentInvestment}; }
+    let w=wealth(); buyPath.push({x:0,y:w.buy}); rentPath.push({x:0,y:w.rent});
+    for(let m=1; m<=years*12; m++){
+      home*=1+hr;
+      let interest=0, paid=0;
+      if(balance>0.000001){
+        interest=balance*r;
+        paid=Math.min(payment,balance+interest);
+        balance=Math.max(0,balance+interest-paid);
+      }
+      interestTotal+=interest;
+      // Assumes insurance/maintenance/HOA scale with home value; only PMI is flat.
+      const houseCosts=paid + home*tax/12 + (insurance/12)*(home/price) + home*maintenance/12 + hoa*(home/price) + (balance>loan*0 && balance>price*0.8 ? pmi : 0);
+      const rentalCosts=rent*Math.pow(1+rr,m-1)+rentIns;
+      buyHousingTotal+=houseCosts; rentHousingTotal+=rentalCosts;
+      // Each household invests only the positive difference versus the other's housing costs.
+      buyInvestment=buyInvestment*(1+ir)+Math.max(0,rentalCosts-houseCosts);
+      rentInvestment=rentInvestment*(1+ir)+Math.max(0,houseCosts-rentalCosts);
+      if(m%12===0){w=wealth();buyPath.push({x:m/12,y:w.buy});rentPath.push({x:m/12,y:w.rent});}
+    }
+    w=wealth();
+    const diff=w.buy-w.rent;
+    const set=(id,v)=>document.getElementById(id).textContent=v;
+    set('rbWinner',Math.abs(diff)<1?'About equal':diff>0?'Buying wins':'Renting wins');
+    set('rbDifference',Math.abs(diff)<1?'The two modeled outcomes are essentially tied.':fmt(Math.abs(diff))+' more projected wealth after '+years+' years');
+    set('rbBuyWealth',fmtShort(w.buy));set('rbRentWealth',fmtShort(w.rent));set('rbMortgagePayment',fmt(payment));
+    const breakdown=[
+      ['Initial renter investment (down payment + buying closing costs)',fmt(down+price*closing)],
+      ['Projected home value',fmt(home)],
+      ['Remaining mortgage balance',fmt(balance)],
+      ['Home sale proceeds after selling costs and mortgage',fmt(home*(1-selling)-balance)],
+      ['Buyer invested monthly cost savings',fmt(buyInvestment)],
+      ['Renter investment balance',fmt(rentInvestment)],
+      ['Cumulative ownership cash paid (incl. down & closing)',fmt(buyHousingTotal)],
+      ['Cumulative rent + renter insurance cash paid',fmt(rentHousingTotal)],
+      ['Mortgage interest paid',fmt(interestTotal)]
+    ];
+    document.getElementById('rbBreakdown').innerHTML=breakdown.map(([k,v])=>'<tr><td>'+k+'</td><td style="text-align:right;white-space:nowrap">'+v+'</td></tr>').join('');
+    drawLineChart('rbChart',[{points:buyPath,color:'#025834'},{points:rentPath,color:'#a8412f'}],{xLabel:v=>'Yr '+v});
+    set('rbExplain','The renter starts by investing the down payment and estimated buyer closing costs. Each month, the option with lower housing outflows invests the difference. Buying ends with estimated net sale proceeds plus any invested monthly savings; renting ends with its invested portfolio. Annual return and appreciation assumptions are constant, and actual outcomes can differ significantly. Negative ending values represent a modeled shortfall, not cash in hand.');
+    document.getElementById('rbResults').classList.add('show');
+  }
+  document.getElementById('copyrightYear').textContent=new Date().getFullYear();
 </script>
 </body>
 </html>
